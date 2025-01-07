@@ -109,8 +109,8 @@ def import_data(separator):
     Output: continuous time over all datasets
    """
     def time_norm(data):
-        a = list(data.iloc[:]['t'])
-        b = list(data.iloc[:]['t'])
+        a = list(data.iloc[:]['time'])
+        b = list(data.iloc[:]['time'])
         
         for u in range(len(a)-1):
             if a[u]>a[u+1]:
@@ -122,14 +122,14 @@ def import_data(separator):
                     a[u+1] = offset + a[u+1]
                     u += 1
                       
-        output = pd.DataFrame({'emg': data.emg, 't': a})
+        output = pd.DataFrame({'emg': data.emg, 'time': a})
         output.reset_index(inplace = True, drop = True)
         return output
     
     """import data and put weights in one variable and mvc in one variable"""
     column_names = [
       'emg',
-      't',  
+      'time',  
     ]
     # Creating an empty Dataframe with column names only
     weights_raw = pd.DataFrame(columns=column_names)
@@ -139,9 +139,9 @@ def import_data(separator):
     # read all mvc, weight, and fatigue files 
     for i in range(3):
         # create string for path
-        weights_string = 'Weight' + str(i+1) + '.txt'
-        mvc_string = 'MVC' + str(i+1) + '.txt'
-        fatigue_string = 'Fatigue' + str(i+1) + '.txt'
+        weights_string = 'data/Matti/' + 'Weight' + str(i+1) + '.csv'
+        mvc_string = 'data/Matti/' + 'MVC' + str(i+1) + '.csv'
+        fatigue_string = 'data/Matti/' + 'Fatigue' + str(i+1) + '.csv'
         
         weights_raw = pd.concat([weights_raw, pd.read_csv(
             weights_string,
