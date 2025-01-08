@@ -166,3 +166,50 @@ def import_data(separator):
     mvc = time_norm(mvc_raw)
     fatigue = time_norm(fatigue_raw)
     return weights, mvc, fatigue
+
+def import_mvc(name, separator):
+
+    def time_norm(data):
+        a = list(data.iloc[:]['time'])
+        b = list(data.iloc[:]['time'])
+        
+        for u in range(len(a)-1):
+            if a[u]>a[u+1]:
+                if b[u]>b[u+1]:
+                    offset = a[u]-a[u+1]+1
+                    a[u+1] = offset + a[u+1]
+                    u += 1
+                else:
+                    a[u+1] = offset + a[u+1]
+                    u += 1
+                      
+        output = pd.DataFrame({'emg': data.emg, 'time': a})
+        output.reset_index(inplace = True, drop = True)
+        return output
+
+    """import data and put weights in one variable and mvc in one variable"""
+    column_names = [
+      'emg',
+      'time',  
+    ]
+    # Creating an empty Dataframe with column names only
+    mvc_raw = pd.DataFrame(columns=column_names)
+
+    for i in range(3):
+        # create string for path
+
+        mvc_string = 'data/' + name + '/' + 'MVC' + str(i+1) + name + '.csv'
+
+        mvc_raw = pd.concat([mvc_raw, pd.read_csv(
+            mvc_string,
+            sep=separator, names=column_names, skiprows= 50, 
+            skipfooter = 50,
+            engine='python'
+        )], ignore_index=True)
+
+    mvc = time_norm(mvc_raw)
+    return mvc
+
+
+def offset_correction(data):
+    return data - np.mean(data)
