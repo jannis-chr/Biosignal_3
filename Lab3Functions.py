@@ -198,7 +198,7 @@ def import_mvc(name, separator):
     for i in range(3):
         # create string for path
 
-        mvc_string = 'data/' + name + '/' + 'MVC' + str(i+1) + name + '.csv'
+        mvc_string = 'data/' + name + '/' + 'MVC' + str(i+1) + '_' + name + '.csv'
 
         mvc_raw = pd.concat([mvc_raw, pd.read_csv(
             mvc_string,
