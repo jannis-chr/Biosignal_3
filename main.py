@@ -132,4 +132,6 @@ ax3.plot(time_mvc_02, mvc_02_envelope)
 ax3.set_title('Einhüllende der MVC-Daten')
 ax3.set(xlabel='Time [s]', ylabel='EMG [mV]')
 
+plt.ion()
 mvc_01_s, mvc_01_e, weights_01_s, weights_01_e, fatigue_01_s, fatigue_01_e = lf3.get_bursts(mvc_01_filtered, weights_01_filtered, fatigue_01_filtered)
+plt.ioff()
