@@ -32,10 +32,18 @@ time_mvc_03 = mvc_03['time'] / 1000 #Umwandlung in Sekunden
 #Extrahierung der EMG Daten
 mvc_03 = mvc_03['emg']
 
+#Importieren der Daten von Julian: MVC
+mvc_04 = lf3.import_mvc('Julian', ';')
+#Extrahierung der Zeit
+time_mvc_04 = mvc_04['time'] / 1000 #Umwandlung in Sekunden
+#Extrahierung der EMG Daten
+mvc_04 = mvc_04['emg']
+
 #Entgernen des Offsets bei den MVC-Daten
 mvc_01 = lf3.offset_correction(mvc_01)
 mvc_02 = lf3.offset_correction(mvc_02)
 mvc_03 = lf3.offset_correction(mvc_03)
+mvc_04 = lf3.offset_correction(mvc_04)
 weights_01 = lf3.offset_correction(weights_01)
 fatigue_01 = lf3.offset_correction(fatigue_01)
 
@@ -43,6 +51,7 @@ fatigue_01 = lf3.offset_correction(fatigue_01)
 mvc_01_filtered = fm.butter_bandpass_filter(mvc_01, 20, 450, 1000, 5)
 mvc_02_filtered = fm.butter_bandpass_filter(mvc_02, 20, 450, 1000, 5)
 mvc_03_filtered = fm.butter_bandpass_filter(mvc_03, 20, 450, 1000, 5)
+mvc_04_filtered = fm.butter_bandpass_filter(mvc_04, 20, 450, 1000, 5)
 weights_01_filtered = fm.butter_bandpass_filter(weights_01, 20, 450, 1000, 5)
 fatigue_01_filtered = fm.butter_bandpass_filter(fatigue_01, 20, 450, 1000, 5)
 
@@ -50,6 +59,7 @@ fatigue_01_filtered = fm.butter_bandpass_filter(fatigue_01, 20, 450, 1000, 5)
 mvc_01_rectified = np.abs(mvc_01_filtered)
 mvc_02_rectified = np.abs(mvc_02_filtered)
 mvc_03_rectified = np.abs(mvc_03_filtered)
+mvc_04_rectified = np.abs(mvc_04_filtered)
 weights_01_rectified = np.abs(weights_01_filtered)
 fatigue_01_rectified = np.abs(fatigue_01_filtered)
 
@@ -57,6 +67,7 @@ fatigue_01_rectified = np.abs(fatigue_01_filtered)
 mvc_01_envelope = fm.butter_lowpass_filter(mvc_01_rectified, 3, 1000, 5)
 mvc_02_envelope = fm.butter_lowpass_filter(mvc_02_rectified, 3, 1000, 5)
 mvc_03_envelope = fm.butter_lowpass_filter(mvc_03_rectified, 3, 1000, 5)
+mvc_04_envelope = fm.butter_lowpass_filter(mvc_04_rectified, 3, 1000, 5)
 weights_01_envelope = fm.butter_lowpass_filter(weights_01_rectified, 3, 1000, 5)
 fatigue_01_envelope = fm.butter_lowpass_filter(fatigue_01_rectified, 3, 1000, 5)
 
@@ -92,6 +103,11 @@ plt.ion()
 mvc_03_s, mvc_03_e, _, _, _, _ = lf3.get_bursts(mvc_03_filtered, weights_01_filtered, fatigue_01_filtered)
 plt.ioff()
 
+# Aktivitätsphasen von Julian
+plt.ion()
+mvc_04_s, mvc_04_e, _, _, _, _ = lf3.get_bursts(mvc_04_filtered, weights_01_filtered, fatigue_01_filtered)
+plt.ioff()
+
 
 # Berechnung der MVC-Mittelwerte Matti
 mvc_01_mean_0 = np.mean(mvc_01_envelope[mvc_01_s[0]:mvc_01_e[0]])
@@ -114,6 +130,13 @@ mvc_03_mean_2 = np.mean(mvc_03_envelope[mvc_03_s[2]:mvc_03_e[2]])
 mvc_03_mean = np.mean([mvc_03_mean_0, mvc_03_mean_1, mvc_03_mean_2])
 print('MVC-Mittelwert von Jannis:', mvc_03_mean)
 
+# Berechnung der MVC-Mittelwerte Julian
+mvc_04_mean_0 = np.mean(mvc_04_envelope[mvc_04_s[0]:mvc_04_e[0]])
+mvc_04_mean_1 = np.mean(mvc_04_envelope[mvc_04_s[1]:mvc_04_e[1]])
+mvc_04_mean_2 = np.mean(mvc_04_envelope[mvc_04_s[2]:mvc_04_e[2]])
+mvc_04_mean = np.mean([mvc_04_mean_0, mvc_04_mean_1, mvc_04_mean_2])
+print('MVC-Mittelwert von Julian:', mvc_04_mean)
+
 # Berechnung der relativen Muskelaktivität für die Gewichte
 relative_weights_1 = np.mean(weights_01_envelope[weights_01_s[0]:weights_01_e[0]]) / mvc_01_mean * 100
 relative_weights_2 = np.mean(weights_01_envelope[weights_01_s[1]:weights_01_e[1]]) / mvc_01_mean * 100
@@ -122,6 +145,13 @@ print('Relative Muskelaktivität für das Gewicht 2,5 kg:', relative_weights_1, 
 print('Relative Muskelaktivität für das Gewicht 5 kg:', relative_weights_2, '%')
 print('Relative Muskelaktivität für das Gewicht 10 kg:', relative_weights_3, '%')
 
+# Aufgabe 8
+# Erstellen eines Balkendiagramms
+plt.bar([1, 2, 3], [relative_weights_1, relative_weights_2, relative_weights_3], color='blue')
+plt.xticks([1, 2, 3], ['2.5', '5', '10'])
+plt.xlabel('Gewicht [kg]')
+plt.ylabel('Relative Muskelaktivität [%]')
+plt.show()
 
 #Aufgabe 9
 # Daten in eine JSON-Datei schreiben

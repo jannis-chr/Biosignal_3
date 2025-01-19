@@ -3,6 +3,7 @@ import scipy.signal as sps
 import matplotlib
 import matplotlib.pyplot as plt
 import pandas as pd
+import random
 
 #Butterworth Bandpass Filter für die Filterung
 def butter_bandpass_filter(data, lowcut, highcut, fs, order=5):
