@@ -125,10 +125,10 @@ print('Relative Muskelaktivität für das Gewicht 10 kg:', relative_weights_3, '
 
 #Aufgabe 9
 # Daten in eine JSON-Datei schreiben
-fatigue_start_time = [37, 5730, 12450]
-fatigue_end_time = [5550, 12100, 18450]
-fatigue_start_time = np.array(fatigue_start_time)
-fatigue_end_time = np.array(fatigue_end_time)
+fatigue_start_time = fatigue_01_s #[37, 5730, 12450]
+fatigue_end_time = fatigue_01_e #[5550, 12100, 18450]
+#fatigue_start_time = np.array(fatigue_start_time)
+#fatigue_end_time = np.array(fatigue_end_time)
 
 # Define the segment length
 segment_length = 500  # 500 milliseconds
